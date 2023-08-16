@@ -51,12 +51,12 @@ That's all! 匿名函数 #footnote[http://learnyouahaskell.com/higher-order-func
 
 == 语法分析
 
-最朴素的语法分析模块采用从「初始字符串 #footnote[顾名思义，一串字符。]」映射到「该模块分析结果」的函数，其中分析结果有两种可能：
+语法分析模块其实就是从「初始字符串 #footnote[顾名思义，一串字符。]」映射到「该模块分析结果」的函数，其中分析结果有两种可能：
 
 - #tag[分析成功] 返回「处理结果」`res` 和「处理后剩余字符串」`str`，记为 `Success res str`
 - #tag[分析失败] 啥也不返回，记为 `Fail`
 
-把上面的东西翻译成 Haskell，设 `res` 的类型为 `a`，整个模块分析结果的类型为 `ParseResult a`，则模块可以记为：
+把上面的东西翻译成 Haskell （记住 Haskell 程序的本质只是函数！），设 `res` 的类型为 `a`，整个模块分析结果的类型为 `ParseResult a`，则模块可以记为：
 
 #sect[
 ```haskell
@@ -81,7 +81,7 @@ data ParseResult a =
 
 === 拼接
 
-现在假设我们需要读入一个形如 `2+4` 的加法算式，返回加法结果，但我们只有两个小模块：
+现在假设我们需要写一个「从形如 `2+4` 的加法算式到加法结果的函数」，但我们只有两个小模块，或者说是两个功能更少的函数：
 
 - #tag[`char x`] 判断字符串是否以 `x` 开头，如果是，吞掉字符 `x`，返回 `()`
   - `char 'A' "Anqur" = Success () "nqur"`
@@ -117,7 +117,7 @@ bind : (prev : String -> ParseResult a) -> (next : a -> (String -> ParseResult b
 - #tag[next] 摆烂后的行动，参数是摆烂前模块结果的类型 `a`，返回最终结果类型
 - #tag[返回值类型] 把摆烂前模块和摆烂后行动绑定在一起，返回的结果就是摆烂后行动的结果，因此返回值类型也是摆烂后行动结果的类型
 
-为了方便理解 `bind` 到底是什么，让我们看看有了 `bind` 原程序能得到怎样的简化，其中 `\param => body` 表示参数为 `param`，返回 `body` 的匿名函数：
+为了方便理解 `bind` 到底是什么，让我们看看有了 `bind` 之后原程序（函数）能得到怎样的简化，其中 `\param => body` 表示参数为 `param`，返回 `body` 的匿名函数：
 
 #sect[
 ```haskell
@@ -238,7 +238,7 @@ alt mod mod' str = case mod str of
 ```
 ]
 
-用这些知识足以实现一个自己的玩具编程语言，我会现场带大家实现。
+用这些知识足以实现一个自己的玩具编程语言，我会现场带大家实现。成品将被放在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk]。
 
 === 扩展阅读：其他有用的函数
 
