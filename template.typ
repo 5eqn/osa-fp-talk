@@ -2,6 +2,7 @@
 #let colors = (
   gray: luma(238),
   blue: rgb(240, 240, 250),
+  red: rgb(255, 240, 240),
 )
 
 #let tag(body, color: "gray") = {
