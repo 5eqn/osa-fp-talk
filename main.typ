@@ -9,30 +9,65 @@
 
 = 前言
 
+== 目标受众
+
+不论你出于什么原因，只要想学习怎么搓一个自己的编程语言，都可以来听！
+
+不需要编程前置知识，但需要熟悉高中数学里函数的概念，相信大家能满足这个要求。
+
+所有标记了「补充」或「扩展阅读」的模块通常需要一定的编程基础，但不是必须阅读的。
+
+== 本次 Talk 不能给你带来什么
+
+- 提高某门课程的成绩，因为 FP 是冷门分支而不是捷径
+- 独立搓出像 Rust 这种有竞争力的语言，因为个人力量只能搓小玩具
+- 提高团队编程生产力，因为团队编程中最好采用成熟、有活跃社区的技术
+
+不过即使 FP 在功利意义上如此不堪，依靠 FP 掌握独立搓出编程语言的能力，难道不是一件很酷的事情吗？如果还感兴趣的话，就继续听下去吧！
+
+== 但是，如果不会编程，真的能直接搓编程语言吗？
+
+这就需要归功于 FP 了。FP 即函数式编程，你只需要理解「函数」，就理解了 FP 的一大半，从而绕过正常编程里的大量复杂概念，快速开始你的编程旅途。
+
+代价是，相比高中的「函数」概念，我们需要进行一个小小的推广：
+
+高中数学中的函数，例如 $f(x) = x + 1$，本质上是把「数」映射成「数」。在函数式编程中，我们可以大胆放飞想象，搞出从「任意东西」映射到「任意东西」的函数：
+
+- $f(\""aabc"\") = 4$，$f(\""oiiai"\") = 5$……
+  - $f$ 把「字符串」映射成「数」，这个数是字符串的长度
+- $f(n)$ 是「加 $n$ 函数」而不是一个具体的数，$f(1)(1) = 2$，$f(4)(5) = 9$……
+  - $f$ 把「数」映射成「数到数的函数」，结果是两个参数的和
+- 若 $f(x) = x + 1$，$g(f) = f(0) = 1$；若 $f(x) = 2 x$，$g(f) = f(0) = 0$……
+  - $g$ 把「数到数的函数」映射成「数」，记函数为 $f$，则结果为 $f(0)$
+
+这也正是为什么 FP 具有强大到能搓出编程语言的表达力！
+
+#sect(title: "补充", color: "blue")[大部分命令式编程语言也可以做到这一点，只是命令式编程重在设计处理过程，函数式编程重在设计函数结构。] 
+
+== 但是，真的可以一节课搓出来吗？
+
+不好说，但我相信可以。为了尝试证明这点，我将在剩下的 Talk 中边讲边自己手搓，如果搓成了，不就证明了可以搓出来吗？
+
+#tag[TODO] 如果我能搓好 YJHC 的复现，我会补充一个传统方法和 FP 方法的差距对比，但现在还没搓好……如果没有这个对比应该也没关系吧！就是没有成品展示了……
+
 == 自我介绍
 
 哈深大二 CS 人，有较多工业编程实践 #footnote[在 GitHub 和某实验室。] 的同时爱好编程语言理论，喜欢发猫猫虫表情包以及玩 Eggy Party。如果愿意的话，考虑关注我的 GitHub 账号 #footnote[https://github.com/5eqn] qwq
 
-== 前置知识
-
-只需要在高中学会函数是什么，会基本的四则运算即可，不需要编程基础！
-
-== 名词解释
-
-因标题字数受限，我使用了一些缩略性的表述：
-
-- #tag[FP] Functional Programming，函数式编程，一种编程范式，在 talk 中我将详细讲述
-- #tag[手搓] 这里指从 Haskell 语言开始，不依赖任何外部库（待定）
-
-== 如果你真的想跟着做……
-
-你需要安装 Haskell，Linux 用户可参考这篇文章 #footnote[https://zhuanlan.zhihu.com/p/455688955]，Windows 用户考虑安装 WSL2 #footnote[https://learn.microsoft.com/zh-cn/windows/wsl/install]。如果懒得安装 Haskell，可以选择使用在线编辑器 #footnote[例如 https://www.w3cschool.cn/tryrun/runcode?lang=haskell]。  
+#sect(title: "补充：如果你真的想跟着做……", color: "blue")[
+你需要安装 Haskell，Linux 用户可参考这篇文章 #footnote[https://zhuanlan.zhihu.com/p/455688955，处理了多版本适配]，Windows 用户考虑安装 WSL2 #footnote[https://learn.microsoft.com/zh-cn/windows/wsl/install] 后参考 Linux 用户做法。如果懒得安装 Haskell，可以选择使用在线编辑器 #footnote[例如 https://www.w3cschool.cn/tryrun/runcode?lang=haskell]。  
+]
 
 = 正文
 
+要体验 FP 之美，首先需要一个函数式编程语言，这里我们选择血统纯正的 Haskell。
+
 == Haskell 语法基础
 
-以下内容没有超出高中数学中函数的概念，只是在 Haskell 语言中语法略有不同。以定义一个整数到整数的函数为例：
+自然语言表述： 
+
+- $f$ 是整数到整数的函数
+- $f$ 的作用是把数加一
 
 数学表述：
 
@@ -47,48 +82,112 @@ f x = x + 1
 ```
 ]
 
-That's all! 匿名函数 #footnote[http://learnyouahaskell.com/higher-order-functions#lambdas]、代数数据类型 #footnote[http://learnyouahaskell.com/making-our-own-types-and-typeclasses#algebraic-data-types] 和模式匹配 #footnote[http://learnyouahaskell.com/syntax-in-functions#pattern-matching] 有专门的语法，但很一目了然，我觉得大家看到就能立刻明白。
+就这么简单！
 
-== 语法分析
+#sect(title: "补充", color: "blue")[匿名函数 #footnote[http://learnyouahaskell.com/higher-order-functions#lambdas]、代数数据类型 #footnote[http://learnyouahaskell.com/making-our-own-types-and-typeclasses#algebraic-data-types] 和模式匹配 #footnote[http://learnyouahaskell.com/syntax-in-functions#pattern-matching] 有专门的语法，但很一目了然，我觉得大家看到就能立刻明白。]
 
-语法分析模块其实就是从「初始字符串 #footnote[顾名思义，一串字符。]」映射到「该模块分析结果」的函数，其中分析结果有两种可能：
+== 从 $1+1$ 开始
 
-- #tag[分析成功] 返回「处理结果」`res` 和「处理后剩余字符串」`str`，记为 `Success res str`
-- #tag[分析失败] 啥也不返回，记为 `Fail`
+现在假设我们想做个简单的加法计算器，例如：
 
-把上面的东西翻译成 Haskell （记住 Haskell 程序的本质只是函数！），设 `res` 的类型为 `a`，整个模块分析结果的类型为 `ParseResult a`，则模块可以记为：
+- 处理 `"1+1"`，得到 `2`
+- 处理 `"1+1=4"`，得到 `2`，剩下 `"=4"`
+- 处理 `"11+45and"`，得到 `56`，剩下 `"and"`
+- 处理 `"114-514"`，直接报错，因为不是加法
+
+用函数的眼光来看，我们想实现一个从「初始字符串」映射到「分析结果」的函数，记这个函数为 $"plus"$，其中分析结果有两种可能：
+
+- #tag[分析成功] 返回「值」$r : ZZ$ 和「剩余字符串」$s : "String"$，记为 $"Success"(r)(s)$
+- #tag[分析失败] 啥也不返回，记为 $"Fail"$
+
+那么我们有：
+
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== 函数眼光
+- $"plus"(\""1+1"\") = "Success"(2)(\"""\")$
+- $"plus"(\""11+45and"\") = "Success"(56)(\""and"\")$
+- $"plus"(\""114-514"\") = "Fail"$
+], [
+=== 原需求
+- 处理 `"1+1"`，得到 `2`
+- 处理 `"11+45and"`，得到 `56`，剩下 `"and"`
+- 处理 `"114-514"`，直接报错，因为不是加法
+])]
+
+由此可见，$"plus"$ 的功能就是判断字符串是否以一个合法的加法式子开头，是则吞掉该式子的字符串，值为加法式子的计算结果。
+
+把上面的东西翻译成 Haskell，记 `"1+1"`、`"1+1=4"` 这种字符串的类型为 `String`，`2`、`56` 这种整数的类型为 `Int`，把分析结果的类型取名为 `ParseResult Int`，则函数可以记为：
 
 #sect[
 ```haskell
-f : String -> ParseResult a
+plus : String -> ParseResult Int
 ```
 ]
 
-而 `ParseResult` 的定义如下：
+而 `ParseResult Int` 的定义如下：
 
 #sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Haskell 写法
+```haskell
+data ParseResult Int =
+  | Success Int String
+  | Fail
+```
+], [
+=== 函数眼光
+分析结果有两种可能，
+- 分析成功：返回「值」$r : ZZ$ 和「剩余字符串」$s : "String"$
+- 分析失败：啥也不返回，记为 $"Fail"$
+])]
+
+如果值类型不是整数 `Int`，而是其他的类型，比如 `String` 或者表示不含信息的 `()` 类型，要怎么写成 Haskell？难道分别实现 `ParseResult Int`、`ParseResult String` 和 `ParseResult ()` 吗？并没有这么麻烦，我们可以随便选个不引起歧义的名字来代表这个可变的类型：
+
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Haskell 写法
 ```haskell
 data ParseResult a =
-  | Success a String -- option 1: 
-                     -- success with result and remaining string
-                     -- here `a` and `String` are types
-  | Fail -- option 2:
-         -- fail with no result
+  | Success a String
+  | Fail
 ```
-]
+], [
+=== 函数眼光
+分析结果有两种可能，
+- 分析成功：返回「值」$r : a$ 和「剩余字符串」$s : "String"$
+- 分析失败：啥也不返回，记为 $"Fail"$
+])]
 
-这就是代数数据类型，是不是很符合直觉？可惜绝大部分语言都不原生支持它。
+#sect(title: "补充", color: "blue")[这就是代数数据类型，是不是很符合直觉？可惜绝大部分语言都不原生支持它。] 
+
+有了这些定义，就可以把 `plus` 的几个例子用 Haskell 写出来：
+
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Haskell 写法
+- `plus "1+1" = Success 2 ""`
+- `plus "11+45and" = Success 56 "and"`
+- `plus "114-514" = Fail`
+], [
+=== 函数眼光
+- $"plus"(\""1+1"\") = "Success"(2)(\"""\")$
+- $"plus"(\""11+45and"\") = "Success"(56)(\""and"\")$
+- $"plus"(\""114-514"\") = "Fail"$
+])]
 
 === 拼接
 
-现在假设我们需要写一个「从形如 `2+4` 的加法算式到加法结果的函数」，但我们只有两个小模块，或者说是两个功能更少的函数：
+假设我们已经实现了下面两个小函数：
 
-- #tag[`char x`] 判断字符串是否以 `x` 开头，如果是，吞掉字符 `x`，返回 `()`
+- $"char"(x)$ 判断字符串是否以 $x$ 开头，是则吞掉字符 $x$，值为空，用 `()` 表示
   - `char 'A' "Anqur" = Success () "nqur"`
-- #tag[`num`] 判断字符串是否以数字开头，如果是，吞掉开头的数字，返回这个数字
+- $"num"$ 判断字符串是否以数字开头，是则吞掉开头的数字，值为被吞的数字
   - `num "51121 511121" = Success 51121 " 511121"`
 
-若要用小模块拼接成大模块：
+我们要怎么用这两个小函数，拼成读取加法式子的大函数呢？
+
+
 
 #sect[```haskell
 plus : String -> ParseResult Int
