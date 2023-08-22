@@ -1,0 +1,7 @@
+# typst
+*.pdf
+
+# haskell
+*.hi
+*.o
+Main
