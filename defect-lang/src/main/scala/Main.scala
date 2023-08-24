@@ -89,9 +89,10 @@ def neg = for {
 def atom = ident.map(name => Term.Var(name))
 
 def lam = for {
-  _ <- exact("lam")
+  _ <- exact('(')
   param <- ident
-  _ <- exact("->")
+  _ <- exact(')')
+  _ <- exact("=>")
   body <- term
 } yield Term.Lam(param, body)
 
@@ -139,36 +140,38 @@ def term: Parser[Term] = pos | neg | atom | lam | app | add | let | alt
 
 enum Val:
   case Num(value: Int)
-  case Lam(param: String, body: Val => Val)
+  case Lam(body: Val => Val)
+  case Rec(env: Map[String, Val], term: Term)
 
-case class Error() extends Exception
-
-def eval(env: Map[String, Val], term: Term): Val =
-  term match
-    case Term.Num(value) => Val.Num(value)
-    case Term.Var(name)  => env(name)
-    case Term.Lam(param, body) =>
-      Val.Lam(param, arg => eval(env + (param -> arg), body))
-    case Term.App(func, arg) =>
-      eval(env, func) match
-        case Val.Lam(param, body) => body(eval(env, arg))
-        case _                    => throw Error()
-    case Term.Add(lhs, rhs) =>
-      (eval(env, lhs), eval(env, rhs)) match
-        case (Val.Num(a), Val.Num(b)) => Val.Num(a + b)
-        case _                        => throw Error()
-    case Term.Let(name, value, next) =>
-      eval(env + (name -> (eval(env, value))), next)
-    case Term.Alt(lhs, rhs, x, y) =>
-      (eval(env, lhs), eval(env, rhs)) match
-        case (Val.Num(a), Val.Num(b)) =>
-          if a == b then eval(env, x) else eval(env, y)
-        case _ => throw Error()
+def eval(env: Map[String, Val], term: Term): Val = term match
+  case Term.Num(value) => Val.Num(value)
+  case Term.Var(name) =>
+    env(name) match
+      case Val.Rec(loc, term) =>
+        eval(loc + (name -> Val.Rec(loc, term)), term)
+      case value => value
+  case Term.Lam(param, body) =>
+    Val.Lam(arg => eval(env + (param -> arg), body))
+  case Term.App(func, arg) =>
+    eval(env, func) match
+      case Val.Lam(body) => body(eval(env, arg))
+      case _             => throw new Exception("app")
+  case Term.Add(lhs, rhs) =>
+    (eval(env, lhs), eval(env, rhs)) match
+      case (Val.Num(a), Val.Num(b)) => Val.Num(a + b)
+      case _                        => throw new Exception("add")
+  case Term.Let(name, value, next) =>
+    eval(env + (name -> Val.Rec(env, value)), next)
+  case Term.Alt(lhs, rhs, x, y) =>
+    (eval(env, lhs), eval(env, rhs)) match
+      case (Val.Num(a), Val.Num(b)) =>
+        if a == b then eval(env, x) else eval(env, y)
+      case _ => throw new Exception("alt")
 
 // 从这里开始运行
 
 @main def run() =
-  val src = Source.fromFile("sample/fib.defect")
+  val src = Source.fromFile("sample/rec-fib.defect")
   val str = src.mkString
   src.close()
   term.run(str) match

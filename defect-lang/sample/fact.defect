@@ -1,8 +1,8 @@
-let Z = lam f ->
-  let g = lam x -> app(f, lam y -> app(app(x, x), y)) in
+let Z = (f) =>
+  let g = (x) => app(f, (y) => app(app(x, x), y)) in
   app(g, g) in
 
-let mulgen = lam mul -> lam x -> lam y ->
+let mulgen = (mul) => (x) => (y) =>
   if y == 0 then 0 else
   if y == 1 then x else
     let z = add(y, -1) in
@@ -10,7 +10,7 @@ let mulgen = lam mul -> lam x -> lam y ->
 
 let mul = app(Z, mulgen) in
 
-let factgen = lam fact -> lam x ->
+let factgen = (fact) => (x) =>
   if x == 1 then 1 else
     let y = add(x, -1) in
     app(app(mul, x), app(fact, y)) in

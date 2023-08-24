@@ -1,3 +1,5 @@
+-- 该实现不支持自己调用自己的函数
+
 import Data.Char
 import GHC.Base
 
@@ -110,9 +112,10 @@ var = do
   pure (Var name)
 
 lam = do
-  exact "lam"
+  char '('
   param <- ident
-  exact "->"
+  char ')'
+  exact "=>"
   body <- term
   pure (Lam param body)
 
