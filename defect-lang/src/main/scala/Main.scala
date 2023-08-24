@@ -145,10 +145,8 @@ case class Error() extends Exception
 
 def eval(env: Map[String, Val], term: Term): Val =
   term match
-    case Term.Num(value) =>
-      if value == 114514 then println("fuck")
-      Val.Num(value)
-    case Term.Var(name) => env(name)
+    case Term.Num(value) => Val.Num(value)
+    case Term.Var(name)  => env(name)
     case Term.Lam(param, body) =>
       Val.Lam(param, arg => eval(env + (param -> arg), body))
     case Term.App(func, arg) =>

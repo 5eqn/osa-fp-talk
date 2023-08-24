@@ -5,3 +5,8 @@
 *.hi
 *.o
 Main
+
+# krita
+*.kra
+*.kra~
+*.png~
