@@ -9,6 +9,43 @@
 
 = 前言
 
+== 目标受众
+
+推荐学习过 C 语言或其他相似语言的人参加本次 Talk，以获得最佳体验。
+
+本次 Talk 是个科普，旨在展示函数式编程的美，起到让听众「感性地理解」的效果，不会深入进行逻辑推导。如果你比较重视逻辑，我的下一场类型论 Talk 是专为你准备的。
+
+== 导语
+
+你是否好奇过，机器是如何把编程语言转化成执行结果的？
+
+#figure(
+  image("res/lang.png", width: 50%),
+  caption: [
+    转化过程？
+  ],
+)
+
+业界有很多种实现方式，本次 Talk 我们讲最简单的一种：
+
+#figure(
+  image("res/code.png", width: 50%),
+  caption: [
+    再写一个程序来转化！
+  ],
+)
+
+但是，写程序处理一个编程语言，一看就是个大工程！真的能在一节课内搞定吗？
+
+可以！
+
+#figure(
+  image("res/carbon.png", width: 50%),
+  caption: [
+    我的程序
+  ],
+)
+
 == 自我介绍
 
 哈深大二 CS 人，有较多工业编程实践 #footnote[在 GitHub 和某实验室。] 的同时爱好编程语言理论，喜欢发猫猫虫表情包以及玩 Eggy Party。如果愿意的话，考虑关注我的 GitHub 账号 #footnote[https://github.com/5eqn] qwq
@@ -562,3 +599,6 @@ Fun Fact: 我原先打算讲怎么用 FP 搓 AI 中的自动求导，但感觉�
   - I would just randomly add the questions when actually implementing
 - time (11AM)
   - perhaps?
+- word count
+  - how to mix with handout?
+- inspiration
