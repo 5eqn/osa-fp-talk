@@ -2,7 +2,6 @@ import scala.io.Source
 
 // 一些辅助函数
 
-def isWhitespace(ch: Char) = ch == ' ' || ch == '\n'
 def isNumeric(ch: Char) = ch >= '0' && ch <= '9'
 def isAlphabetic(ch: Char) = ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z'
 

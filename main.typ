@@ -15,6 +15,13 @@
 
 本次 Talk 是个科普，旨在展示函数式编程的美，不会深入进行逻辑推导。
 
+#figure(
+  image("res/tenet.png", width: 50%),
+  caption: [
+    《信条》剧照 / 不要试图理解它，要感受它
+  ],
+)
+
 如果你比较重视逻辑，我的下一场类型论 Talk 是专为你准备的。
 
 == 自我介绍
@@ -113,7 +120,7 @@
 经过这个 40 分钟的 Talk，你也将大致知道怎么搓出自己的编程语言！
 
 #sect(title: "补充：如果你真的想跟着做……", color: "blue")[
-你需要安装 Scala3。  
+你需要安装 Scala3 #footnote[https://www.scala-lang.org/download/]。  
 ]
 
 #pagebreak()
@@ -136,7 +143,7 @@ int f(int x) {
 
 #sect[```c
 void f(int *x) {
-  x++;
+  *x++;
 }```]
 
 在函数式编程中，相比 C 语言最大的不同就是：不能「修改」一个数。
@@ -144,48 +151,71 @@ void f(int *x) {
 若要采用函数式编程的写法把数加一，你只能：
 
 #sect[```scala
-def f(x: int) = x + 1
+def f(x: Int) = x + 1
 ```] 
 
 #sect(title: "一些例题", color: "blue")[
 
 不用在意语法，只要不修改数就行。
 
-1. 请写一个函数 `isWhitespace`，判断一个字符是不是空格或换行。
-2. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
-3. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
+1. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
+2. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
 
-答案在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk/blob/ab7c09acf7e7ac38242d675984cb2888edccbcb4/defect-lang/src/main/scala/Main.scala#L5-L7]，我在 Talk 里也会讲。] 
+答案在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk/blob/ab7c09acf7e7ac38242d675984cb2888edccbcb4/defect-lang/src/main/scala/Main.scala#L6-L7]，我在 Talk 里也会讲。] 
 
 #pagebreak()
 
 == 2 / 9 来点更难的问题
 
+我们是要处理编程语言，而不是 $f(x) = x + 1$，因此我们需要有能力处理字符串。
+
 如果我们要从一个字符串 `str = "you are new bee"` 里面提取出第一个单词，可以怎么做？
 
-#sect(title: "", color: "red")[假如你想到了指针，请暂时遗忘指针的概念，因为函数式编程里没有指针。] 
+你可能会想用一个指针从 `str[0]` 往后扫，扫到不是字母的东西，就把指针前面的作为结果。
 
-请准备好，接下来是一个很新的概念！
+但这背后的逻辑其实很简单：你希望从前往后处理。
 
-我们可以把字符串看成一个「有两种情况的东西」：
+在函数式编程中，我们可以「不依赖外界值，直接用数据表达顺序」：
+
+#figure(
+  image("res/string.png", width: 50%),
+  caption: [
+    C 和函数式编程对字符串的不同处理方式
+  ],
+)
+
+具体地，我们可以把字符串看成一个「有两种情况的东西」：
 
 #sect(title: "两种情况", color: "blue")[
 
 1. 由一个字符 `head` 和一个字符串 `tail` 拼接而成，例如 `"Au5" = 'A' + "u5"`
 2. 为空，例如 `""`] 
 
-这两个规则可以完整地描述字符串的概念，这样我们就绕开了指针！
+这两个规则便可以完整地描述字符串的概念！
 
 现在我们尝试来写提取出第一个单词的函数：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 代码
+```scala
 def collect(str: String): String =
+
   str.headOption match
     case Some(head) if isAlphabetic(head) => // ?
     case _                                => // ?
-```]
+```
+], [
+=== 意义
 
-第一种情况表示 `head` 存在且是字母，那我们自然要保留这个 `head`。
+要提取 `str` 的第一个单词：
+
+- 讨论 `head` 的情况
+  - `head` 存在且为字母
+  - 其他情况
+])]
+
+若 `head` 存在且为字母，那我们自然要保留这个 `head`。
 
 考虑到 `head == 'y'`，`collect("ou are new bee") == "ou"`，结果可以写成：
 
@@ -193,11 +223,20 @@ def collect(str: String): String =
 head + collect(str.tail)
 ```] 
 
-第二种情况表示 `head` 不存在或者不是字母，显然什么都提取不出，返回空字符串即可。
+若 `head` 不存在或者不是字母，显然什么都提取不出，返回空字符串即可。
 
 #pagebreak()
 
 == 3 / 9 再难一点
+
+在处理编程语言的时候，我们总不能读入一个东西，就把后面的字符串全部丢掉吧！
+
+#figure(
+  image("res/recycle.png", width: 50%),
+  caption: [
+    你不想这样做
+  ],
+)
 
 如果我们需要同时收集剩下的字符串，可以怎么修改这个函数？
 
@@ -217,7 +256,7 @@ val (res, rem) = collect(str.tail)
 (hd + res, rem)
 ```]
 
-第二种情况下，整个字符串都是被剩下的。
+第二种情况下，整个字符串都是被剩下的，所以结果是 `("", str)`。
 
 #pagebreak()
 
@@ -246,6 +285,7 @@ int mian() {
 === Scala3 写法
 ```scala
 enum Result[+A]:
+
   case Success(res: A, rem: String)
   case Fail
 ```
@@ -257,6 +297,13 @@ enum Result[+A]:
 - 分析成功：返回「值」`res` 和「剩余字符串」`str`
 - 分析失败：啥也不返回，记为 `Fail`
 ])]
+
+#figure(
+  image("res/cases.png", width: 40%),
+  caption: [
+    无论成功还是失败，都是结果！
+  ],
+)
 
 我们可以把 `collect` 包装起来：
 
@@ -272,7 +319,7 @@ def ident(str: String) =
 
 1. 请写一个函数 `exact`，判断字符串是否以字符 `exp` 开头。
 2. 请写一个函数 `exact`，判断字符串是否以字符串 `exp` 开头。
-3. 请写一个函数 `number`，判断字符串是否以数字开头。] 
+3. 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。] 
 
 #pagebreak()
 
@@ -292,6 +339,13 @@ def ident(str: String) =
 case class Parser[A](run: String => Result[A]):
 ```] 
 
+#figure(
+  image("res/box.png", width: 50%),
+  caption: [
+    `Parser` 是盒子，`run` 是拆开盒子的剪刀
+  ],
+)
+
 把 `ident` 写成 `Parser[String]`，就是：
 
 #sect[```scala
@@ -305,7 +359,9 @@ def ident = Parser(str =>
 
 要使用 `ident`，本来我们 `ident("some str")` 就可以，现在要 `ident.run("some str")`。
 
-现在 `exact`、`ident` 和 `number` 都是某种 `Parser`，已经蓄势待发。
+……
+
+现在 `ident`、`exact` 和 `number` 都是某种 `Parser`，已经蓄势待发。
 
 接下来，请见证表达力的起飞！
 
@@ -328,6 +384,13 @@ enum Term:
 我们希望结果变成 `Success(Term.Num(51121), "cat")`。
 
 设想我们能「截胡」处理出来的值 `51121`，然后换成 `Term.Num(51121)`，不就简单了吗？
+
+#figure(
+  image("res/map.png", width: 50%),
+  caption: [
+    截胡的过程
+  ],
+)
 
 假设这个「截胡」函数是 `map`，读入 `Term.Num` 只需要：
 
@@ -362,6 +425,13 @@ def map[B](cont: A => B) = Parser(str =>
 
 如果截胡之后还能有「第二条命」，那该多好？
 
+#figure(
+  image("res/flatmap.png", width: 50%),
+  caption: [
+    第二条命
+  ],
+)
+
 假设这个「给第二条命的截胡」函数是 `flatMap`，读入一个负数只需要：
 
 #sect[```scala
@@ -385,9 +455,11 @@ def flatMap[B](cont: A => Parser[B]) = Parser(str =>
 )
 ```
 
-如果不用 `trim`，在连续读入两个数字 `114 514` 时，第一次会剩下 ` 514`，注意前面有空格！
+若不用 `trim`，在连读两个数字 `"114 514"` 时，第一次会剩下 `" 514"`，注意前面有空格！
 
-这个空格会导致第二次读入失败，从而寄掉。`trim` 就是为了删除这种前导空格。]
+这个空格会导致第二次读入失败。`trim` 就是为了删除这种前导空格。
+
+另一种选择是每次读入东西之后都专门再读入空格。]
 
 #pagebreak()
 
@@ -420,6 +492,13 @@ def neg = for {
 } yield Term.Num(-value)
 ```
 ])]
+
+#figure(
+  image("res/for.png", width: 50%),
+  caption: [
+    对应关系
+  ],
+)
 
 你甚至可以把 `<-` 想成某种赋值！
 
@@ -454,6 +533,7 @@ def add = for {
 === Scala3 代码
 ```scala
 enum Val:
+
   case Num(value: Int)
   case Lam(body: Val => Val)
 ```
@@ -490,7 +570,7 @@ def eval(env: Map[String, Val], term: Term): Val = term match
 
 `Term.Lam(param, body)` 表示匿名函数，显然值是 `Val.Lam(arg => ?)` 的形式。
 
-接受参数 `arg` 后语境中多出了 `param -> arg`，因此值是 `eval(env + (param -> arg), body)`。
+接受参数 `arg` 后语境中多出了 `param -> arg`，因此 `?` 是 `eval(env + (param -> arg), body)`。
 
 剩下的求值都相对简单，读者可以尝试构思，答案在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk/blob/ab7c09acf7e7ac38242d675984cb2888edccbcb4/defect-lang/src/main/scala/Main.scala#L140-L166]。
 
