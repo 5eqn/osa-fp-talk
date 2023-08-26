@@ -1,21 +1,19 @@
 #import "template.typ": *
 
 #show: project.with(
-  title: "带你用函数式编程手搓自己的编程语言",
+  title: "如何用 143 行代码搓出新编程语言？",
   authors: (
-    "5eqn（电子鼠会梦见仿生猫猫虫吗）",
+    "5eqn",
   ),
 )
 
 = 前言
 
-== 目标受众
-
-推荐学习过 C 语言或其它相似语言的人参加本次 Talk，以获得最佳体验。
+答案是用「函数式编程」！
 
 本次 Talk 是个科普，旨在描绘函数式编程的美，不会深入进行逻辑推导。
 
-如果你比较重视逻辑，我的下一场类型论 Talk 是专为你准备的。
+即使你只是单纯好奇，也可以来听！
 
 #figure(
   image("res/tenet.png", width: 50%),
@@ -24,13 +22,36 @@
   ],
 )
 
+== 目标受众
+
+推荐学习过 C 语言或其它相似语言的人参加本次 Talk，以获得最佳体验。
+
 == 自我介绍
 
 哈深大二 CS 人，有较多工业编程实践 #footnote[在 GitHub 和某实验室。] 的同时爱好编程语言理论。
 
 喜欢发猫猫虫表情包以及玩 Eggy Party。
 
-如果愿意的话，考虑关注我的 GitHub 账号 #footnote[https://github.com/5eqn] qwq
+如果有条件的话，考虑在 GitHub 给本次 Talk 讲义点个星 #footnote[https://github.com/5eqn/osa-fp-talk] qwq
+
+== 鸣谢
+
+本讲义能有现在的质量，离不开大量同学的建议和帮助，我在此表达真诚的感谢。
+
+下面是鸣谢名单（按照字典序），但只有征得同意的一部分，且可能有疏漏：
+
+#columns(3)[
+- AntibodyGame
+- Clouder
+- harpsichord
+- San_Cai
+- SeparateWings
+- toaster
+- yyx
+- zc
+- zly
+- ...（这个列表还会增长）
+]
 
 #pagebreak()
 
@@ -117,7 +138,7 @@
   ],
 )
 
-经过这个 100 分钟的 Talk，你也将大致知道怎么搓出自己的编程语言！
+经过本系列 Talk，你也将大致知道怎么搓出自己的编程语言！
 
 #sect(title: "补充：如果你真的想跟着做……", color: "blue")[
 你需要安装 Scala3 #footnote[https://www.scala-lang.org/download/]。  
@@ -125,9 +146,30 @@
 
 #pagebreak()
 
-= 正文 
+= 第一章 / 横看成岭侧成峰
 
-== 1 / 9 什么是函数式编程？
+惯常把程序看成一条一条指令的我们，或许从未想过，换个视角便能看到不同的美。
+
+如果说 C 语言是在问「怎么做」，那函数式编程便是在问「是什么」。
+
+#figure(
+  image("res/swap.png", width: 50%),
+  caption: [
+    C 语言和函数式编程解决交换问题
+  ],
+)
+
+听完本章，你将收获：
+
+- 了解「函数式编程」的基本概念
+- 掌握用函数式编程处理「字符串」的技巧
+- 学会更「干净」地建模现实事物
+
+预计时间：30 分钟
+
+#pagebreak()
+
+== 1 / 4 什么是函数式编程？
 
 考虑在 C 语言中，你会怎么写一个函数，用于把数加一？
 
@@ -150,9 +192,17 @@ void f(int *x) {
 
 若要采用函数式编程的写法把数加一，你只能：
 
-#sect[```scala
-def f(x: Int) = x + 1
-```] 
+
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 代码
+```scala
+def f(x: Int): Int = x + 1
+```
+], [
+=== 意义
+定义 $f$ 使得 $f(x) = x + 1$，其中 $x$ 和 $f(x)$ 的类型是整数。
+])]
 
 #sect(title: "一些例题", color: "blue")[
 
@@ -165,7 +215,7 @@ def f(x: Int) = x + 1
 
 #pagebreak()
 
-== 2 / 9 来点更难的问题
+== 2 / 4 来点更难的问题
 
 我们是要处理编程语言，而不是 $f(x) = x + 1$，因此我们需要有能力处理字符串。
 
@@ -193,7 +243,7 @@ def f(x: Int) = x + 1
 
 这两个规则便可以完整地描述字符串的概念！
 
-现在我们尝试来写提取出第一个单词的函数：
+现在我们尝试来写提取出第一个单词的函数，`collect`：
 
 #sect[
 #grid(columns: (auto, auto), gutter: 10pt, [
@@ -208,26 +258,35 @@ def collect(str: String): String =
 ], [
 === 意义
 
-要提取 `str` 的第一个单词：
+若要提取 `str` 的第一个单词：
 
 - 讨论 `head` 的情况
   - `head` 存在且为字母
   - 其他情况
 ])]
 
-若 `head` 存在且为字母，那我们自然要保留这个 `head`。
+若 `head` 存在且为字母，那我们自然要保留这个 `head`：
 
 考虑到 `head == 'y'`，`collect("ou are new bee") == "ou"`，结果可以写成：
 
-#sect[```scala
-head + collect(str.tail)
-```] 
+#sect[
+#grid(columns: (40%, 60%), gutter: 10pt, [
+=== Scala3 代码
+```scala
+val res = collect(str.tail)
+head + res
+```
+], [
+=== 意义
+- 设 `collect(str.tail)` 的结果为 `res`
+- 则 `collect(str)` 的结果为 `head + res`
+])]
 
 若 `head` 不存在或者不是字母，显然什么都提取不出，返回空字符串即可。
 
 #pagebreak()
 
-== 3 / 9 再难一点
+== 3 / 4 再难一点
 
 在处理编程语言的时候，我们总不能读入一个东西，就把后面的字符串全部丢掉吧！
 
@@ -240,27 +299,48 @@ head + collect(str.tail)
 
 如果我们需要同时收集剩下的字符串，可以怎么修改这个函数？
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 代码
+```scala
 def collect(str: String): (String, String) =
+
   str.headOption match
     case Some(head) if isAlphabetic(head) => // ?
     case _                                => // ?
-```]
+```
+], [
+=== 意义
+
+若要同时收集剩下的字符串：
+
+- 讨论 `head` 的情况
+  - `head` 存在且为字母
+  - 其他情况
+])]
 
 第一种情况下，注意到 `collect("ou are new bee") = ("ou", " are new bee")`，
 
 我们希望返回 `("you", " are new bee")`，剩下的字符串不会变化，因此考虑写成：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 代码
+```scala
 val (res, rem) = collect(str.tail)
-(hd + res, rem)
-```]
+(head + res, rem)
+```
+], [
+=== 意义
+- 设 `collect(str.tail)` 的结果为 `(res, rem)`
+- 则 `collect(str)` 的结果为 `(head + res, rem)`
+])]
 
 第二种情况下，整个字符串都是被剩下的，所以结果是 `("", str)`。
 
 #pagebreak()
 
-== 4 / 9 现实是有失败的
+== 4 / 4 现实是有失败的
 
 设想你已经写好了一个编程语言，但有人给你：
 
@@ -299,7 +379,7 @@ enum Result[+A]:
 ])]
 
 #figure(
-  image("res/cases.png", width: 40%),
+  image("res/cases.png", width: 30%),
   caption: [
     无论成功还是失败，都是结果！
   ],
@@ -307,13 +387,27 @@ enum Result[+A]:
 
 我们可以把 `collect` 包装起来：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 写法
+```scala
 def ident(str: String) =
+
   val (res, rem) = collect(str)
   if res.length() > 0
   then Result.Success(res, rem)
   else Result.Fail
-```]
+```
+], [
+=== 意义
+
+定义一个新函数 `ident`：
+
+- 设 `collect(str)` 的结果为 `(res, rem)`
+- 若 `res` 的长度大于 $0$
+- 则 `ident(str)` 为 `Success(res, rem)`
+- 否则 `ident(str)` 为 `Fail`
+])]
 
 #sect(title: "一些例题", color: "blue")[
 
@@ -323,7 +417,13 @@ def ident(str: String) =
 
 #pagebreak()
 
-== 5 / 9 表达力的源头
+= 第二章：正片开始
+
+预计时间：30 分钟
+
+#pagebreak()
+
+== 1 / 4 表达力的源头
 
 你可能会好奇：函数式编程不是对 C 语言的「限制」吗？怎么还能有更强的表达力？
 
@@ -348,14 +448,35 @@ case class Parser[A](run: String => Result[A]):
 
 把 `ident` 写成 `Parser[String]`，就是：
 
-#sect[```scala
-def ident = Parser(str =>
-  val (res, rem) = collect(str)
-  if res.length() > 0
-  then Result.Success(res, rem)
-  else Result.Fail
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 写法
+```scala
+def ident = Parser(
+
+  str =>
+    val (res, rem) = collect(str)
+    if res.length() > 0
+    then Result.Success(res, rem)
+    else Result.Fail
 )
-```] 
+```
+], [
+=== 意义
+
+定义 `ident` 为一个 `Parser`，装着：
+
+- 一个接受 `str` 作为参数的函数
+  - 设 `collect(str)` 的结果为 `(res, rem)`
+  - 若 `res` 的长度大于 $0$
+  - 则返回 `Success(res, rem)`
+  - 否则返回 `Fail`
+])]
+
+#sect(title: "补充", color: "blue")[
+注意 `Parser` 装着的那个函数没有名字，被直接以 `str => ...` 的形式创建！
+
+这样的函数也叫「匿名函数」。] 
 
 要使用 `ident`，本来我们 `ident("some str")` 就可以，现在要 `ident.run("some str")`。
 
@@ -367,15 +488,26 @@ def ident = Parser(str =>
 
 #pagebreak()
 
-== 6 / 9 截胡
+== 2 / 4 截胡
 
 现在假设我们的编程语言里只会出现变量和数字：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 写法
+```scala
 enum Term:
+
   case Num(value: Int)
   case Var(name: String)
-```] 
+```
+], [
+=== 意义
+表达式有两种可能：
+
+- 数字，例如 `51121` 会被处理成 `Num(51121)`
+- 变量，例如 `oiiai` 会被处理成 `Var("oiiai")`
+])]
 
 要用已有的 `number` 来写一个读取 `Term.Num` 的 `Parser`，最简单的方式是什么？
 
@@ -394,9 +526,19 @@ enum Term:
 
 假设这个「截胡」函数是 `map`，读入 `Term.Num` 只需要：
 
-#sect[```scala
-def pos = number.map(value => Term.Num(value))
-```] 
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 写法
+```scala
+def pos = number.map(
+  x => Term.Num(x)
+)
+```
+], [
+=== 意义
+- 定义 `pos` 为对 `number` 截胡得到的新 `Parser`
+- 截胡用的函数把数字 `x` 变成 `Term.Num(x)`
+])]
 
 是不是很简单？
 
@@ -415,7 +557,7 @@ def map[B](cont: A => B) = Parser(str =>
 
 #pagebreak()
 
-== 7 / 9 第二条命
+== 3 / 4 第二条命
 
 截胡有一个致命缺点：只有一条命。
 
@@ -434,13 +576,22 @@ def map[B](cont: A => B) = Parser(str =>
 
 假设这个「给第二条命的截胡」函数是 `flatMap`，读入一个负数只需要：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 10pt, [
+=== Scala3 写法
+```scala
 def neg = exact('-').flatMap(
   _ => number.map(
-    value => Term.Num(-value)
+    x => Term.Num(-x)
   )
 )
-```] 
+```
+], [
+=== 意义
+- 定义 `neg` 为对 `exact('-')` 截胡得到的新 `Parser`
+- 直接忽略结果，用续的命再读一个 `number`，再截胡
+- 把数字 `x` 变成 `Term.Num(-x)`
+])]
 
 是不是依然很简单？
 
@@ -463,7 +614,7 @@ def flatMap[B](cont: A => Parser[B]) = Parser(str =>
 
 #pagebreak()
 
-== 8 / 9 神说，要有加
+== 4 / 4 神说，要有加
 
 只读入数字和变量怎么行？我们要读入 `add(1, 1)` 这种加法！
 
@@ -494,7 +645,7 @@ def neg = for {
 ])]
 
 #figure(
-  image("res/for.png", width: 50%),
+  image("res/for.png", width: 40%),
   caption: [
     对应关系
   ],
@@ -504,27 +655,91 @@ def neg = for {
 
 现在再实现 `add`，就清晰了不少：
 
-#sect[```scala
+#sect[
+#grid(columns: (auto, auto), gutter: 40pt, [
+=== Scala3 写法
+```scala
 def add = for {
   _ <- exact("add")
   _ <- exact('(')
-  lhs <- term
+  lhs <- pos
   _ <- exact(',')
-  rhs <- term
+  rhs <- pos
   _ <- exact(')')
 } yield Term.Add(lhs, rhs)
-```] 
+```
+], [
+=== 意思
+- 定义 `add` 为这样的 `Parser`：
+- 先读一个 `"add"`
+- 再读一个 `'('`
+- 再读一个正数，记为 `lhs`
+- 再读一个 `','`
+- 再读一个正数，记为 `rhs`
+- 再读一个 `')'`
+- 最终处理结果为 `Term.Add(lhs, rhs)`
+])]
 
-#sect(title: "按照这种思路，我们还可以实现", color: "blue")[
+#sect(title: "按照这种思路，我们还可以读取", color: "blue")[
 
-- `if`，选择分支
-- `let x = 1 in x`，定义新值
-- `(x) => x + 1`，创建函数
-- `app(f, x)`，函数调用] 
+- `if a == b then c else d`，选择分支，记为 `Term.Alt(Term.Var("a"), ...)`
+- `let x = 1 in x`，定义新值，记为 `Term.Let("x", Term.Num(1), Term.Var("x"))`
+- `(x) => add(x, 1)`，创建匿名函数，记为 `Term.Lam("x", Term.Add(...))` 
+- `app(f, x)`，函数调用，记为 `Term.App(Term.Var("f"), ...)`] 
 
 #pagebreak()
 
-== 9 / 9 怎么求值？
+= 第三章 / 终章
+
+预计时间：15 分钟 + 15 分钟自由发挥
+
+#pagebreak()
+
+== 1 / 2 神说，要有或
+
+细心的你可能已经发现了：`add` 不能读取负数相加、变量相加，这很坏。
+
+我们需要有能力「尝试多条路径」，才能读入「正数或负数或变量」。
+
+#figure(
+  image("res/alt.png", width: 50%),
+  caption: [
+    尝试多条路径读入 `-2`
+  ],
+)
+
+令 `term` 为读入「正数或负数或变量」的 `Parser`：
+
+#sect[
+#grid(columns: (auto, auto), gutter: 40pt, [
+=== Scala3 写法
+```scala
+def term: Parser[Term] = pos | neg | var
+```
+], [
+=== 意思
+定义 `term` 为 `pos` 或 `neg` 或 `var`。
+])]
+
+#sect(title: "补充", color: "blue")[
+`|` 的实现是这样子的：
+
+```scala
+def |(another: Parser[A]) = Parser(str =>
+  run(str) match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => another.run(str)
+)
+```
+] 
+
+随着能读入的东西种类越来越多，`term` 的可选路径也会越来越多。
+
+例如，在实现 `add` 后，`term` 也要能读取一个加法式子，变成 `... | add`。
+
+#pagebreak()
+
+== 2 / 2 怎么求值？
 
 就摁求！
 
