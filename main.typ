@@ -46,12 +46,21 @@
 - harpsichord
 - San_Cai
 - SeparateWings
+#colbreak()
 - toaster
 - yyx
 - zc
 - zly
 - ...（这个列表还会增长）
 ]
+
+== 计划（草稿）
+
+- 线上
+- 在节假日早上 10 点至 10 点半讲，会不会太早？
+- 分成 3 个 30 分钟来讲，每一章在不同日期
+- Talk 前提供讲义
+- 预留思考和提问时间
 
 #pagebreak()
 
