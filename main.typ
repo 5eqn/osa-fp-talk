@@ -56,11 +56,10 @@
 
 == 计划（草稿）
 
-- 线上
-- 在节假日早上 10 点至 10 点半讲，会不会太早？
-- 分成 3 个 30 分钟来讲，每一章在不同日期
+- 线上，媒介待定，取决于预估参与人数
+- 时间：9.9 10:00-10:40, 15:00-15:40; 9.10 10:00-10:40（可能会改）
 - Talk 前提供讲义
-- 预留思考和提问时间
+- 40 分钟内包含思考和提问时间
 
 #pagebreak()
 
@@ -172,9 +171,9 @@
 
 - 了解「函数式编程」的基本概念
 - 掌握用函数式编程处理「字符串」的技巧
-- 学会更「干净」地建模现实事物
+- 学会用函数式编程建模简单的东西
 
-预计时间：30 分钟
+预计时间：40 分钟
 
 #pagebreak()
 
@@ -295,6 +294,39 @@ head + res
 
 #pagebreak()
 
+=== 选读：How it works?
+
+#sect[```scala
+collect("you are new bee")
+== (val res = collect("ou are new bee"); 'y' + res)
+
+collect("ou are new bee")
+== (val res = collect("u are new bee"); 'o' + res)
+
+collect("u are new bee")
+== (val res = collect(" are new bee"); 'u' + res)
+
+collect(" are new bee")
+== ""
+
+collect("u are new bee")
+== (val res = collect(" are new bee"); 'u' + res)
+== (val res = ""; 'u' + res)
+== "u"
+
+collect("ou are new bee")
+== (val res = collect("u are new bee"); 'o' + res)
+== (val res = "u"; 'o' + res)
+== "ou"
+
+collect("you are new bee")
+== (val res = collect("ou are new bee"); 'y' + res)
+== (val res = "ou"; 'y' + res)
+== "you"
+```]
+
+#pagebreak()
+
 == 3 / 4 再难一点
 
 在处理编程语言的时候，我们总不能读入一个东西，就把后面的字符串全部丢掉吧！
@@ -346,6 +378,30 @@ val (res, rem) = collect(str.tail)
 ])]
 
 第二种情况下，整个字符串都是被剩下的，所以结果是 `("", str)`。
+
+#pagebreak()
+
+=== 选读：How it works?
+
+#sect[```scala
+collect(" are new bee")
+== ("", " are new bee")
+
+collect("u are new bee")
+== (val (res, rem) = collect(" are new bee"); ('u' + res, rem))
+== (val (res, rem) = ("", " are new bee"); ('u' + res, rem))
+== ("u", " are new bee")
+
+collect("ou are new bee")
+== (val (res, rem) = collect("u are new bee"); ('o' + res, rem))
+== (val (res, rem) = ("u", " are new bee"); ('o' + res, rem))
+== ("ou", " are new bee")
+
+collect("you are new bee")
+== (val (res, rem) = collect("ou are new bee"); ('y' + res, rem))
+== (val (res, rem) = ("ou", " are new bee"); ('y' + res, rem))
+== ("you", " are new bee")
+```]
 
 #pagebreak()
 
@@ -426,17 +482,49 @@ def ident(str: String) =
 
 #pagebreak()
 
-= 第二章：正片开始
+=== 选读：How it works?
 
-预计时间：30 分钟
+#sect[```scala
+collect("you are new bee")
+== ("you", " are new bee")
+
+res
+== "you"
+
+rem
+== " are new bee"
+
+res.length() > 0
+== true
+
+ident("you are new bee")
+== Result.Success("you", " are new bee")
+```] 
 
 #pagebreak()
 
-== 1 / 4 表达力的源头
+= 第二章：只用 143 行的秘密
 
-你可能会好奇：函数式编程不是对 C 语言的「限制」吗？怎么还能有更强的表达力？
+上面讲述的只是函数式编程的「普通玩法」。
 
-用玄学的方式来讲，限制反而允许我们更激进地提取出代码中的共同逻辑。
+在下面的「进阶玩法」中，我们可以激进地提取出代码中的共同逻辑，从而有效减少行数！
+
+#figure(
+  image("res/reduce.png", width: 50%),
+  caption: [
+    提取共同逻辑
+  ],
+)
+
+听完本章，你将收获：
+
+- 了解一种提取共同逻辑的方式
+
+预计时间：40 分钟
+
+#pagebreak()
+
+== 1 / 4 提取！
 
 现在我们就来尝试提取一下 `ident`、`exact` 和 `number` 的共同特征：
 
@@ -497,6 +585,22 @@ def ident = Parser(
 
 #pagebreak()
 
+=== 选读：How it works?
+
+#sect[```scala
+ident
+== Parser(str => val (res, rem) = collect(str); ...)
+
+ident.run
+== str => val (res, rem) = collect(str); ...
+
+ident.run("you are new bee")
+== (val (res, rem) = collect("you are new bee"); ...)
+== Result.Success("you", " are new bee")
+```] 
+
+#pagebreak()
+
 == 2 / 4 截胡
 
 现在假设我们的编程语言里只会出现变量和数字：
@@ -551,7 +655,13 @@ def pos = number.map(
 
 是不是很简单？
 
-#sect(title: "补充", color: "blue")[
+不妨想想怎么从 `ident` 实现 `atom`，用于读取一个 `Term.Var`。只需要一个 `map` 就行！
+
+#pagebreak()
+
+=== 选读：How it works?
+
+#sect(color: "blue")[
 `map` 的实现是这样子的：
 
 ```scala
@@ -560,9 +670,30 @@ def map[B](cont: A => B) = Parser(str =>
     case Result.Success(res, rem) => Result.Success(cont(res), rem)
     case Result.Fail              => Result.Fail
 )
-```] 
+```]
 
-不妨想想怎么从 `ident` 实现 `atom`，用于读取一个 `Term.Var`。只需要一个 `map` 就行！
+#sect[```scala
+pos
+== number.map(x => Term.Num(x))
+== Parser(str => number.run(str) match
+    case Result.Success(res, rem) => Result.Success((x => Term.Num(x))(res), rem)
+    case Result.Fail              => Result.Fail)
+
+pos.run
+== str => number.run(str) match
+    case Result.Success(res, rem) => Result.Success((x => Term.Num(x))(res), rem)
+    case Result.Fail              => Result.Fail
+
+pos.run("51121cat")
+== number.run("51121cat") match
+    case Result.Success(res, rem) => Result.Success((x => Term.Num(x))(res), rem)
+    case Result.Fail              => Result.Fail
+== Result.Success(51121, "cat") match
+    case Result.Success(res, rem) => Result.Success((x => Term.Num(x))(res), rem)
+    case Result.Fail              => Result.Fail
+== Result.Success((x => Term.Num(x))(51121), "cat")
+== Result.Success(Term.Num(51121), "cat")
+```]
 
 #pagebreak()
 
@@ -604,7 +735,11 @@ def neg = exact('-').flatMap(
 
 是不是依然很简单？
 
-#sect(title: "补充", color: "blue")[
+#pagebreak()
+
+=== 选读：How it works?
+
+#sect(color: "blue")[
 `flatMap` 的实现是这样子的：
 
 ```scala
@@ -620,6 +755,32 @@ def flatMap[B](cont: A => Parser[B]) = Parser(str =>
 这个空格会导致第二次读入失败。`trim` 就是为了删除这种前导空格。
 
 另一种选择是每次读入东西之后都专门再读入空格。]
+
+#sect[```scala
+val cont = _ => number.map(x => Term.Num(-x))
+
+neg
+== exact('-').flatMap(cont)
+== Parser(str => exact('-').run(str) match
+    case Result.Success(res, rem) => cont(res).run(rem.trim())
+    case Result.Fail              => Result.Fail)
+
+neg.run
+== str => exact('-').run(str) match
+    case Result.Success(res, rem) => cont(res).run(rem.trim())
+    case Result.Fail              => Result.Fail
+
+neg.run("-114 and 514")
+== exact('-').run(str) match
+    case Result.Success(res, rem) => cont(res).run(rem.trim())
+    case Result.Fail              => Result.Fail
+== Result.Success('-', "114 and 514") match
+    case Result.Success(res, rem) => cont(res).run(rem.trim())
+    case Result.Fail              => Result.Fail
+== cont('-').run("114 and 514".trim())
+== number.map(x => Term.Num(-x)).run("114 and 514")
+== Result.Success(-114, " and 514")
+```] 
 
 #pagebreak()
 
@@ -698,9 +859,26 @@ def add = for {
 
 #pagebreak()
 
-= 第三章 / 终章
+= 第三章 / 搓出编程语言！
 
-预计时间：15 分钟 + 15 分钟自由发挥
+我们已经有了足够的知识储备，现在可以来搓一个编程语言了！
+
+我搓的语言是 `defect-lang`，名字来源于游戏 Slay the Spire 中的一个角色：
+
+#figure(
+  image("res/defect.jpg", width: 50%),
+  caption: [
+    The Defect
+  ],
+)
+
+用 143 行搓出来的语言，虽然有一些缺陷，但也能实现意想不到的事情。
+
+听完本章，你将收获：
+
+- 了解如何搓出一个编程语言
+
+预计时间：40 分钟
 
 #pagebreak()
 
@@ -730,7 +908,15 @@ def term: Parser[Term] = pos | neg | var
 定义 `term` 为 `pos` 或 `neg` 或 `var`。
 ])]
 
-#sect(title: "补充", color: "blue")[
+随着能读入的东西种类越来越多，`term` 的可选路径也会越来越多。
+
+例如，在实现 `add` 后，`term` 也要能读取一个加法式子，变成 `... | add`。
+
+#pagebreak()
+
+=== 选读：How it works?
+
+#sect(color: "blue")[
 `|` 的实现是这样子的：
 
 ```scala
@@ -740,11 +926,39 @@ def |(another: Parser[A]) = Parser(str =>
     case Result.Fail              => another.run(str)
 )
 ```
-] 
+]
 
-随着能读入的东西种类越来越多，`term` 的可选路径也会越来越多。
+#sect[```scala
+term
+== (pos | neg) | var
+== Parser(str => (pos | neg).run(str) match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => var.run(str))
 
-例如，在实现 `add` 后，`term` 也要能读取一个加法式子，变成 `... | add`。
+pos | neg
+== Parser(str => pos.run(str) match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => neg.run(str))
+
+(pos | neg).run("-114 and 514")
+== pos.run("-114 and 514") match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => neg.run("-114 and 514")
+== Result.Fail match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => neg.run("-114 and 514")
+== neg.run("-114 and 514")
+== Result.Success(-114, " and 514")
+
+term.run("-114 and 514")
+== (pos | neg).run("-114 and 514") match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => var.run("-114 and 514")
+== Result.Success(-114, " and 514") match
+    case Result.Success(res, rem) => Result.Success(res, rem)
+    case Result.Fail              => var.run("-114 and 514")
+== Result.Success(-114, " and 514")
+```] 
 
 #pagebreak()
 
@@ -783,7 +997,7 @@ def eval(env: Map[String, Val], term: Term): Val = term match
   case Term.Alt(lhs, rhs, x, y) =>
 ```] 
 
-#sect(title: "补充", color: "blue")[如果你 `let x = 1`，`env` 里就会多出 `x -> 1` 这条记录。
+#sect(title: "env 是个什么东西？", color: "blue")[如果你 `let x = 1`，`env` 里就会多出 `x -> 1` 这条记录。
 
 换言之，参数 `env` 存储已知的名字到值的对应关系。
 ] 
@@ -797,6 +1011,55 @@ def eval(env: Map[String, Val], term: Term): Val = term match
 接受参数 `arg` 后语境中多出了 `param -> arg`，因此 `?` 是 `eval(env + (param -> arg), body)`。
 
 剩下的求值都相对简单，读者可以尝试构思，答案在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk/blob/ab7c09acf7e7ac38242d675984cb2888edccbcb4/defect-lang/src/main/scala/Main.scala#L140-L166]。
+
+#pagebreak()
+
+=== 选读：How it works?
+
+要处理以下的程序：
+
+#sect[```scala
+app((x) => add(x, 1), 4)
+```] 
+
+过程是这样子的：
+
+#sect[```scala
+val f = Term.Lam("x", Term.Add(Term.Var("x"), Term.Num(1)))
+
+eval(Map(), Term.App(f, Term.Num(4)))
+== eval(Map(), f) match
+     case Val.Lam(body) => body(eval(Map(), Term.Num(4)))
+     case _ => throw new Exception("app")
+
+eval(Map(), Term.Lam("x", Term.Add(Term.Var("x"), Term.Num(1))))
+== Val.Lam(arg => eval(env + ("x" -> arg), Term.Add(Term.Var("x"), Term.Num(1))))
+
+eval(Map(), Term.Num(4))
+== Val.Num(4)
+
+eval(Map(), Term.App(f, Term.Num(4)))
+== (arg => eval(
+     Map() + ("x" -> arg), 
+     Term.Add(Term.Var("x"), Term.Num(1))
+   ))(Val.Num(4))
+== eval(Map("x" -> Val.Num(4)), Term.Add(Term.Var("x"), Term.Num(1)))
+== (eval(Map("x" -> Val.Num(4)), Term.Var("x")), 
+    eval(Map("x" -> Val.Num(4)), Term.Num(1))) match
+     case (Val.Num(a), Val.Num(b)) => Val.Num(a + b)
+     case _ => throw new Exception("add")
+
+eval(Map("x" -> Val.Num(4)), Term.Var("x"))
+== Map("x" -> Val.Num(4))("x")
+== Val.Num(4)
+
+eval(Map(), Term.App(f, Term.Num(4)))
+== (Val.Num(4), Val.Num(1)) match
+     case (Val.Num(a), Val.Num(b)) => Val.Num(a + b)
+     case _ => throw new Exception("add")
+== Val.Num(4 + 1)
+== Val.Num(5)
+```] 
 
 #pagebreak()
 
@@ -838,6 +1101,8 @@ Fun Fact: 我原先打算讲怎么用 FP 搓 AI 中的自动求导，但感觉�
 == 下期预告，如果有
 
 利用丰富的类型把 Bug 限制在编译期！
+
+#pagebreak()
 
 == 左递归
 
