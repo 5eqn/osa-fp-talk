@@ -1,6 +1,3 @@
-package main
-import scala.io.Source
-
 // 一些辅助函数
 
 def isNumeric(ch: Char) = ch >= '0' && ch <= '9'
@@ -170,10 +167,7 @@ def eval(env: Map[String, Val], term: Term): Val = term match
 
 // 从这里开始运行
 
-@main def run() =
-  val src = Source.fromFile("sample/rec-fib.defect")
-  val str = src.mkString
-  src.close()
+def run(str: String) =
   term.run(str) match
     case Result.Fail => println("Parse failed")
     case Result.Success(res, rem) =>

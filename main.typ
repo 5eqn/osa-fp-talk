@@ -28,11 +28,11 @@
 
 == 自我介绍
 
-哈深大二 CS 人，有较多工业编程实践 #footnote[在 GitHub 和某实验室。] 的同时爱好编程语言理论。
+哈深大二 CS 人，开源技术协会核心成员，有适量工业编程实践 #footnote[在 GitHub 和某实验室。] 的同时爱好编程语言理论。
 
 喜欢发猫猫虫表情包以及玩 Eggy Party。
 
-如果有条件的话，考虑在 GitHub 给本次 Talk 讲义点个星 #footnote[https://github.com/5eqn/osa-fp-talk] qwq
+如果有条件的话，考虑在 GitHub 给本次 Talk 讲义和开源代码点个星 #footnote[https://github.com/5eqn/osa-fp-talk] qwq
 
 == 鸣谢
 
@@ -41,25 +41,35 @@
 下面是鸣谢名单（按照字典序），但只有征得同意的一部分，且可能有疏漏：
 
 #columns(3)[
+- Anqur
 - AntibodyGame
 - Clouder
 - harpsichord
+- launchd
+#colbreak()
+- N3M0
+- Origami404
 - San_Cai
 - SeparateWings
+- SoraShu
 #colbreak()
 - toaster
 - yyx
 - zc
 - zly
-- ...（这个列表还会增长）
+- ...
 ]
 
-== 计划（草稿）
+#pagebreak()
 
-- 线上，媒介待定，取决于预估参与人数
-- 时间：9.9 10:00-10:40, 15:00-15:40; 9.10 10:00-10:40（可能会改）
-- Talk 前提供讲义
-- 40 分钟内包含思考和提问时间
+特别感谢「开源技术协会」！如果你喜欢开源技术，欢迎加入我们！
+
+#figure(
+  image("res/osa.jpg", width: 50%),
+  caption: [
+    开源技术协会群二维码
+  ],
+)
 
 #pagebreak()
 
@@ -154,7 +164,7 @@
 
 #pagebreak()
 
-= 第一章 / 横看成岭侧成峰
+= 第一部分 / 横看成岭侧成峰
 
 惯常把程序看成一条一条指令的我们，或许从未想过，换个视角便能看到不同的美。
 
@@ -193,10 +203,10 @@ int f(int x) {
 
 #sect[```c
 void f(int *x) {
-  *x++;
+  *x = *x + 1;
 }```]
 
-在函数式编程中，相比 C 语言最大的不同就是：不能「修改」一个数。
+在函数式编程中，相比 C 语言最大的不同就是：不能「修改」一个值。
 
 若要采用函数式编程的写法把数加一，你只能：
 
@@ -214,7 +224,7 @@ def f(x: Int): Int = x + 1
 
 #sect(title: "一些例题", color: "blue")[
 
-不用在意语法，只要不修改数就行。
+不用在意语法，只要不修改值就行。
 
 1. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
 2. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
@@ -503,7 +513,7 @@ ident("you are new bee")
 
 #pagebreak()
 
-= 第二章：只用 143 行的秘密
+= 第二部分：只用 143 行的秘密
 
 上面讲述的只是函数式编程的「普通玩法」。
 
@@ -570,7 +580,7 @@ def ident = Parser(
   - 否则返回 `Fail`
 ])]
 
-#sect(title: "补充", color: "blue")[
+#sect(color: "blue")[
 注意 `Parser` 装着的那个函数没有名字，被直接以 `str => ...` 的形式创建！
 
 这样的函数也叫「匿名函数」。] 
@@ -859,7 +869,7 @@ def add = for {
 
 #pagebreak()
 
-= 第三章 / 搓出编程语言！
+= 第三部分 / 搓出编程语言！
 
 我们已经有了足够的知识储备，现在可以来搓一个编程语言了！
 
@@ -1070,23 +1080,23 @@ eval(Map(), Term.App(f, Term.Num(4)))
 在目前工业实践中，FP 不仅可以以单独的函数式语言的形式存在，而且可以融合在一些主流语言的主流框架之中，且后者的应用显著更广泛。以下是几个例子：
 
 - #tag[前端] React.js 的设计模式和 FP 非常共通，例如提倡使用不可变变量
-- #tag[后端] Rocket.rs 基于 Rust 语言，Rust 本身大量借鉴 FP 元素，该框架还沾类型论
+- #tag[后端] Rocket.rs 基于 Rust 语言，Rust 本身大量借鉴 FP 元素，例如模式匹配
 - #tag[AI] PyTorch 中模型的模块其实就是一个个函数，自动求导也能用类似的方式实现
 - #tag[游戏开发] Unity 中 ECS 架构中的 System 可以被视为上一状态到下一状态的函数
 
 同时也有不少工业向的 FP or FP-ish 语言，例如：
 
-- #tag[Rust] 相当通用的语言，有独特的生命周期和所有权，编程语言中的「原神」（？
+- #tag[Rust] 相当通用的语言，有独特的生命周期和所有权机制，编程语言中的「原神」（？
 - #tag[Kotlin] Java 家族成员，主要用于安卓开发，沾 FP 但只沾一点点
 - #tag[Clojure] 基于 JVM 的 Lisp 方言，比较通用
 - #tag[PureScript] 和 Haskell 很像，编译成 JavaScript，主要用于 Web 前端
 - #tag[Elm] 专门用来写 Web 前端的语言
-- #tag[Idris2] 不仅 FP 而且 Type-driven，希望消灭所有运行时错误
+- #tag[Idris2] 不仅 FP 而且 Type-driven，希望消灭所有运行时错误 #footnote[https://github.com/edwinb/SPLV20] 
 
 == 深入研究方向
 
 - #tag[源码] PL Zoo #footnote[http://plzoo.andrej.com/]，各种编程语言实现技巧的代码演示，使用 OCaml 语言。 
-- #tag[类型论] FP 和类型论高度相关，考虑从无穷类型咖啡 #footnote[https://space.bilibili.com/3494366737861355/video?tid=0&pn=2&keyword=&order=pubdate] 开始入门类型论，我下次也会讲。
+- #tag[类型论] FP 和类型论高度相关，考虑从类型论暑校 #footnote[https://infinity-type-cafe.github.io/ntype-cafe-summer-school/] 开始入门类型论，我下次也会讲。
 
 == 我为什么选择这个题材
 
@@ -1100,7 +1110,7 @@ Fun Fact: 我原先打算讲怎么用 FP 搓 AI 中的自动求导，但感觉�
 
 == 下期预告，如果有
 
-利用丰富的类型把 Bug 限制在编译期！
+类型论
 
 #pagebreak()
 
@@ -1145,3 +1155,5 @@ series = do
             <|> pure left
 ```
 ]
+
+
