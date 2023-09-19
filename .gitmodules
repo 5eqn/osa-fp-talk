@@ -1,0 +1,3 @@
+[submodule "defect-lang"]
+	path = defect-lang
+	url = git@github.com:5eqn/defect-lang.git
