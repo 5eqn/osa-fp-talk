@@ -1,5 +1,0 @@
-let f = (x) =>
-  let y = add(x, 1) in
-  y in
-
-app(f, 1)
