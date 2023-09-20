@@ -486,8 +486,8 @@ def ident(str: String) =
 
 #sect(title: "一些例题", color: "blue")[
 
-1. 请写一个函数 `exact`，判断字符串是否以字符 `exp` 开头。
-2. 请写一个函数 `exact`，判断字符串是否以字符串 `exp` 开头。
+1. 请写一个函数 `exactChar`，判断字符串是否以字符 `exp` 开头。
+2. 请写一个函数 `exactString`，判断字符串是否以字符串 `exp` 开头。
 3. 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。] 
 
 #pagebreak()
