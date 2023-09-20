@@ -143,7 +143,6 @@ void f(int *x) {
 #pagebreak()
 
 #sect(title: "一些例题", color: "blue")[
-
 1. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
 2. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
 
@@ -162,6 +161,12 @@ void f(int *x) {
 
 #pagebreak()
 
+#sect(title: "例题", color: "blue")[
+实现 `collect`，读取一个字符串，返回这个字符串以什么单词开头。
+]
+
+#pagebreak()
+
 == 3 / 4 再难一点
 
 #figure(
@@ -170,6 +175,12 @@ void f(int *x) {
     你不想这样做
   ],
 )
+
+#pagebreak()
+
+#sect(title: "例题", color: "blue")[
+修改 `collect`，使其额外返回剩余的字符串。
+]
 
 #pagebreak()
 
@@ -195,10 +206,11 @@ int mian() {
 #pagebreak()
 
 #sect(title: "一些例题", color: "blue")[
-
-1. 请写一个函数 `exact`，判断字符串是否以字符 `exp` 开头。
-2. 请写一个函数 `exact`，判断字符串是否以字符串 `exp` 开头。
-3. 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。] 
+1. 请写一个函数 `word`，提取字符串的第一个单词，单词为空则失败。
+2. 请写一个函数 `exactChar(exp)`，判断字符串是否以字符 `exp` 开头。
+3. 请写一个函数 `exactString(exp)`，判断字符串是否以字符串 `exp` 开头。
+4. 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。
+] 
 
 #pagebreak()
 
@@ -224,6 +236,15 @@ int mian() {
 
 #pagebreak()
 
+#sect(title: "一些例题", color: "blue")[
+1. 封装 `word`。
+2. 封装 `exactChar(exp)`。
+3. 封装 `exactString(exp)`。
+4. 封装 `number`。
+]
+
+#pagebreak()
+
 == 2 / 4 截胡
 
 #figure(
@@ -232,6 +253,13 @@ int mian() {
     截胡的过程
   ],
 )
+
+#pagebreak()
+
+#sect(title: "例题", color: "blue")[
+1. 实现 `pos`，用于读取一个正数并转化为 `Term.Num`。
+2. 实现 `atom`，用于读取一个单词并转化为 `Term.Var`。
+]
 
 #pagebreak()
 
@@ -246,6 +274,12 @@ int mian() {
 
 #pagebreak()
 
+#sect(title: "例题", color: "blue")[
+实现 `neg`，用于读取一个负数并转化为 `Term.Num`。
+]
+
+#pagebreak()
+
 == 4 / 4 神说，要有加
 
 #figure(
@@ -254,6 +288,15 @@ int mian() {
     对应关系
   ],
 )
+
+#pagebreak()
+
+#sect(title: "例题：读取以下程序", color: "blue")[
+- `if a == b then c else d`，选择分支，记为 `Term.Alt(Term.Var("a"), ...)`
+- `let x = 1 in x`，定义新值，记为 `Term.Let("x", Term.Num(1), Term.Var("x"))`
+- `(x) => add(x, 1)`，创建匿名函数，记为 `Term.Lam("x", Term.Add(...))` 
+- `app(f, x)`，函数调用，记为 `Term.App(Term.Var("f"), ...)`
+]
 
 #pagebreak()
 
