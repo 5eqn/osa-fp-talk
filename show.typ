@@ -127,21 +127,6 @@
 
 == 1 / 4 什么是函数式编程？
 
-#sect[```c
-int f(int x) {
-  return x + 1;
-}
-```] 
-
-#pagebreak()
-
-#sect[```c
-void f(int *x) {
-  *x = *x + 1;
-}```]
-
-#pagebreak()
-
 #sect(title: "一些例题", color: "blue")[
 1. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
 2. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
@@ -156,6 +141,15 @@ void f(int *x) {
   image("res/string.png", width: 80%),
   caption: [
     C 和函数式编程对字符串的不同处理方式
+  ],
+)
+
+#pagebreak()
+
+#figure(
+  image("res/option.png", width: 80%),
+  caption: [
+    str.headOption 有两种可能：存在或不存在
   ],
 )
 
@@ -230,7 +224,7 @@ int mian() {
 #figure(
   image("res/box.png", width: 80%),
   caption: [
-    `Parser` 是盒子，`run` 是拆开盒子的剪刀
+    `Parser[A]` 封装 `String => Result[A]`
   ],
 )
 
@@ -246,6 +240,15 @@ int mian() {
 #pagebreak()
 
 == 2 / 4 截胡
+
+#figure(
+  image("res/term.png", width: 80%),
+  caption: [
+    要读入的东西有两种可能：是数字或是变量
+  ],
+)
+
+#pagebreak()
 
 #figure(
   image("res/map.png", width: 80%),
@@ -317,5 +320,16 @@ int mian() {
   image("res/alt.png", width: 80%),
   caption: [
     尝试多条路径读入 `-2`
+  ],
+)
+
+#pagebreak()
+
+== 2 / 2 怎么求值？
+
+#figure(
+  image("res/enum.png", width: 80%),
+  caption: [
+    程序的数据结构
   ],
 )
