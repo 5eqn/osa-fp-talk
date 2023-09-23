@@ -18,37 +18,6 @@
 
 #pagebreak()
 
-== 鸣谢
-
-#columns(3)[
-- Anqur
-- AntibodyGame
-- Clouder
-- harpsichord
-- launchd
-#colbreak()
-- N3M0
-- Origami404
-- San_Cai
-- SeparateWings
-- SoraShu
-#colbreak()
-- toaster
-- yyx
-- zc
-- zly
-- ...
-]
-
-#figure(
-  image("res/osa.jpg", width: 80%),
-  caption: [
-    开源技术协会群二维码
-  ],
-)
-
-#pagebreak()
-
 == 导语
 
 #figure(
@@ -127,11 +96,23 @@
 
 == 1 / 4 什么是函数式编程？
 
-#sect(title: "一些例题", color: "blue")[
-1. 请写一个函数 `isNumeric`，判断一个字符是不是数字。
-2. 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
+#figure(
+  image("res/group.jpg", width: 50%),
+  caption: [
+    FP Talk 群聊
+  ],
+)
+
+#pagebreak()
+
+#sect(title: "目标", color: "blue")[
+
++ 请写一个函数 `isNumeric`，判断一个字符是不是数字。
++ 请写一个函数 `isAlphabetic`，判断一个字符是不是字母。
 
 答案在 GitHub #footnote[https://github.com/5eqn/osa-fp-talk/blob/ab7c09acf7e7ac38242d675984cb2888edccbcb4/defect-lang/src/main/scala/Main.scala#L6-L7]，我在 Talk 里也会讲。] 
+
+#sect(title: "例题", color: "red")[如何实现 `isAlphabetic`？] 
 
 #pagebreak()
 
@@ -155,9 +136,13 @@
 
 #pagebreak()
 
-#sect(title: "例题", color: "blue")[
-实现 `collect`，读取一个字符串，返回这个字符串以什么单词开头。
+#sect(title: "目标", color: "blue")[
+
++ 实现 `collectWord`，读取一个字符串，返回这个字符串以什么单词开头。
++ 实现 `collectNumber`，读取一个字符串，返回这个字符串以什么数字开头。
 ]
+
+#sect(title: "例题", color: "red")[如何实现 `collectNumber`？] 
 
 #pagebreak()
 
@@ -172,9 +157,13 @@
 
 #pagebreak()
 
-#sect(title: "例题", color: "blue")[
-修改 `collect`，使其额外返回剩余的字符串。
+#sect(title: "目标", color: "blue")[
+
++ 修改 `collectWord`，使其额外返回剩余的字符串。
++ 修改 `collectNumber`，使其额外返回剩余的字符串。
 ]
+
+#sect(title: "例题", color: "red")[如何修改 `collectNumber`？] 
 
 #pagebreak()
 
@@ -199,12 +188,17 @@ int mian() {
 
 #pagebreak()
 
-#sect(title: "一些例题", color: "blue")[
-1. 请写一个函数 `word`，提取字符串的第一个单词，单词为空则失败。
-2. 请写一个函数 `exactChar(exp)`，判断字符串是否以字符 `exp` 开头。
-3. 请写一个函数 `exactString(exp)`，判断字符串是否以字符串 `exp` 开头。
-4. 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。
+#sect(title: "目标", color: "blue")[
+
++ 请写一个函数 `word`，提取字符串的第一个单词，单词为空则失败。
++ 请写一个函数 `exactChar(expect)`，判断字符串是否以字符 `expect` 开头。
++ 请写一个函数 `exactString(expect)`，判断字符串是否以字符串 `expect` 开头。
++ 请写一个函数 `number`，读入字符串开头的非负数字，可能有多位。
 ] 
+
+#sect(title: "例题", color: "red")[
+如何实现 `exactChar(expect)`？
+]
 
 #pagebreak()
 
@@ -220,26 +214,6 @@ int mian() {
 #pagebreak()
 
 == 1 / 4 提取！
-
-#figure(
-  image("res/box.png", width: 80%),
-  caption: [
-    `Parser[A]` 封装 `String => Result[A]`
-  ],
-)
-
-#pagebreak()
-
-#sect(title: "一些例题", color: "blue")[
-1. 封装 `word`。
-2. 封装 `exactChar(exp)`。
-3. 封装 `exactString(exp)`。
-4. 封装 `number`。
-]
-
-#pagebreak()
-
-== 2 / 4 截胡
 
 #figure(
   image("res/term.png", width: 80%),
@@ -259,10 +233,49 @@ int mian() {
 
 #pagebreak()
 
-#sect(title: "例题", color: "blue")[
-1. 实现 `pos`，用于读取一个正数并转化为 `Term.Num`。
-2. 实现 `atom`，用于读取一个单词并转化为 `Term.Var`。
+#figure(
+  image("res/box.png", width: 80%),
+  caption: [
+    `Parser[A]` 封装 `String => Result[A]`
+  ],
+)
+
+#pagebreak()
+
+#sect(title: "目标", color: "blue")[
+
++ 封装 `word`。
++ 封装 `exactChar(exp)`。
++ 封装 `exactString(exp)`。
++ 封装 `number`。
 ]
+
+#sect(title: "例题", color: "red")[
+如何封装 `number`？
+] 
+
+#pagebreak()
+
+== 2 / 4 截胡
+
+#figure(
+  image("res/map.png", width: 80%),
+  caption: [
+    截胡的过程
+  ],
+)
+
+#pagebreak()
+
+#sect(title: "目标", color: "blue")[
+
++ 实现 `pos`，用于读取一个正数并转化为 `Term.Num`。
++ 实现 `atom`，用于读取一个单词并转化为 `Term.Var`。
+]
+
+#sect(title: "例题", color: "red")[
+如何实现 `atom`？
+] 
 
 #pagebreak()
 
@@ -277,7 +290,7 @@ int mian() {
 
 #pagebreak()
 
-#sect(title: "例题", color: "blue")[
+#sect(title: "目标", color: "blue")[
 实现 `neg`，用于读取一个负数并转化为 `Term.Num`。
 ]
 
@@ -294,12 +307,18 @@ int mian() {
 
 #pagebreak()
 
-#sect(title: "例题：读取以下程序", color: "blue")[
-- `if a == b then c else d`，选择分支，记为 `Term.Alt(Term.Var("a"), ...)`
-- `let x = 1 in x`，定义新值，记为 `Term.Let("x", Term.Num(1), Term.Var("x"))`
-- `(x) => add(x, 1)`，创建匿名函数，记为 `Term.Lam("x", Term.Add(...))` 
-- `app(f, x)`，函数调用，记为 `Term.App(Term.Var("f"), ...)`
+#sect(title: "目标：读取以下程序", color: "blue")[
+
++ `add(x, 1)`，加法，记为 `Term.Add(Term.Var("x"), Term.Num(1))`
++ `if a == b then c else d`，选择分支，记为 `Term.Alt(Term.Var("a"), ...)`
++ `let x = 1 in x`，定义新值，记为 `Term.Let("x", Term.Num(1), Term.Var("x"))`
++ `(x) => add(x, 1)`，创建匿名函数，记为 `Term.Lam("x", Term.Add(...))` 
++ `app(f, x)`，函数调用，记为 `Term.App(Term.Var("f"), ...)`
 ]
+
+#sect(title: "例题", color: "red")[
+如何读取“创建匿名函数”？
+] 
 
 #pagebreak()
 
@@ -331,5 +350,38 @@ int mian() {
   image("res/enum.png", width: 80%),
   caption: [
     程序的数据结构
+  ],
+)
+
+#pagebreak()
+
+== 鸣谢
+
+#columns(3)[
+- Anqur
+- AntibodyGame
+- Clouder
+- harpsichord
+- launchd
+#colbreak()
+- N3M0
+- Origami404
+- San_Cai
+- SeparateWings
+- SoraShu
+#colbreak()
+- toaster
+- yyx
+- zc
+- zly
+- ...
+]
+
+#pagebreak()
+
+#figure(
+  image("res/osa.jpg", width: 80%),
+  caption: [
+    开源技术协会群二维码
   ],
 )

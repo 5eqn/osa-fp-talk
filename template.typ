@@ -46,7 +46,7 @@
 ) = {
   set document(author: authors, title: title)
   set page(numbering: "1", number-align: center)
-  set text(font: ("Noto Serif CJK SC"))
+  set text(font: ("Noto Serif CJK SC"), size: 15pt)
 
   align(center)[
     #block(text(weight: 700, 1.75em, title))
